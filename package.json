@@ -1,0 +1,29 @@
+{
+  "name": "real-estate-squirrel",
+  "version": "1.0.0",
+  "description": "Search through NYC real estate data based on the parameters included in the data to find neighborhood average sales prices and commonly priced neighborhoods",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:debug": "node --inspect node_modules/.bin/jest --runInBand"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/dmitrinesterenko/squirrel"
+  },
+  "keywords": [
+    "data",
+    "search",
+    "NYC",
+    "real",
+    "estate"
+  ],
+  "author": "Dmitri Nesterenko",
+  "license": "ISC",
+  "dependencies": {
+    "xlsx": "^0.14.2"
+  },
+  "devDependencies": {
+    "jest": "^24.7.1"
+  }
+}
