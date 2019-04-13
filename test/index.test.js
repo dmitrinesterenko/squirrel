@@ -6,6 +6,6 @@ test('finds the median price by neighborhood', () => {
 });
 
 test('filters data by neighborhood', () => {
-	nabe = 'Brooklyn'
-	expect(squirrel.filter(nabe).length).toBe(1000)
+	nabe = 'brooklyn'
+	expect(squirrel.filter(nabe).data.length).toBe(1000)
 });
