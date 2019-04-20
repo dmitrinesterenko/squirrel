@@ -1,4 +1,11 @@
 const xlsx = require('xlsx')
+function get_value(props, defaultValue = 0){
+	if(props && props.v){
+		return props.v	
+	}
+	return defaultValue
+}
+
 function fetch_data(nabe){
 	//stream = fs.createReadStream('data/' + nabe + '.xls')
 	var workbook = xlsx.readFile('data/rollingsales_' + nabe + '.xls')
@@ -36,17 +43,14 @@ function fetch_data(nabe){
 	var sheet = workbook.Sheets[workbook.SheetNames[0]]
 	do{
 	    	var total_units = 0
-	    	if(sheet["N" + i] !== undefined){
-			var total_units = sheet["N"+i].v
-		}
-		data[i-6] = {
-			Neighborhood: sheet["B"+i].v,
-			Price: sheet["T"+i].v,
-			Address: sheet["I"+i].v,
-			ZipCode: sheet["K"+i].v,
-			TotalUnits: sheet["N"+i].v,
-			SqFeet: sheet["P"+i].v,
-			SaleDate: sheet["U"+i].v
+	  	data[i-6] = {
+			Neighborhood: get_value(sheet["B"+i], ""),
+			Price: get_value(sheet["T"+i]),
+			Address: get_value(sheet["I"+i], ""),
+			ZipCode: get_value(sheet["K"+i], ""),
+			TotalUnits: get_value(sheet["N"+i]),
+			SqFeet: get_value(sheet["P"+i]),
+			SaleDate: get_value(sheet["U"+i], "")
 		}
 		next_entry = workbook.Sheets[workbook.SheetNames[0]]["B"+i+1]
 		i = i + 1
@@ -75,19 +79,17 @@ squirrel = {
 		}
 		this.filtered = this.data
 		if(params.ZipCode != undefined){
-			this.filtered = this.data.filter(sale => sale.ZipCode === params.ZipCode);
+			this.filtered = this.data.filter(sale => sale.ZipCode == params.ZipCode);
 		}
 		return this
 	},
 	median: function(){
-		var length = this.filtered.length
-		var sum = this.filtered.reduce((acc, sale) => acc + sale.Price, 0)
-		for(var i = 0; i<length; i++){
-			sum = sum + this.data[i].Price
-		}
-		return sum / length
+		return this.filtered.reduce((acc, sale) => acc + sale.Price, 0)
+		/ this.filtered.length
 	}	
 	
 }
 module.exports = squirrel
-squirrel.filter({Borough: 'brooklyn', ZipCode: '11222'})
+results = squirrel.filter({Borough: 'brooklyn', ZipCode: '11222'})
+debugger
+results.filtered.map(r => console.log(r))
