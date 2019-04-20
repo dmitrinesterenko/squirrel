@@ -1,6 +1,8 @@
 const xlsx = require('xlsx')
 function fetch_data(nabe){
-	stream = fs.createReadStream('data/' + nabe + '.xls')
+	//stream = fs.createReadStream('data/' + nabe + '.xls')
+	var workbook = xlsx.readFile('data/rollingsales_' + nabe + '.xls')
+	return workbook
 }
 function log(data){
     	//TODO add a verbose check before printing out 
@@ -21,6 +23,8 @@ squirrel = {
 		}else{
 			this.data = fetch_data(nabe)
 		}
+		debugger
+		log(this.data.length)
 		return this
 	},
 	median: function(){
