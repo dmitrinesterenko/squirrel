@@ -1,7 +1,7 @@
 const xlsx = require('xlsx')
-function get_value(props, defaultValue = 0){
-	if(props && props.v){
-		return props.v	
+function get_value(props, field = "v", defaultValue = 0){
+	if(props && props[field]){
+		return props[field]
 	}
 	return defaultValue
 }
@@ -44,15 +44,15 @@ function fetch_data(nabe){
 	do{
 	    	var total_units = 0
 	  	data[i-6] = {
-			Neighborhood: get_value(sheet["B"+i], ""),
+			Neighborhood: get_value(sheet["B"+i], "v", ""),
 			Price: get_value(sheet["T"+i]),
-			Address: get_value(sheet["I"+i], ""),
-			ZipCode: get_value(sheet["K"+i], ""),
+			Address: get_value(sheet["I"+i], "v", ""),
+			ZipCode: get_value(sheet["K"+i], "v", ""),
 			TotalUnits: get_value(sheet["N"+i]),
 			SqFeet: get_value(sheet["P"+i]),
-			SaleDate: get_value(sheet["U"+i], "")
+			SaleDate: get_value(sheet["U"+i],"w", "")
 		}
-		next_entry = workbook.Sheets[workbook.SheetNames[0]]["B"+i+1]
+		next_entry = workbook.Sheets[workbook.SheetNames[0]]["B"+(i+1)]
 		i = i + 1
 
 	}while(next_entry != undefined)
@@ -71,12 +71,7 @@ squirrel = {
         filtered: [],	
 	filter: function(params){
 		this.Borough=params.Borough
-		//TODO add a "test" data set to the data folder
-		if(this.Borough == 'test'){
-			this.data = [100.00]
-		}else{
-			this.data = fetch_data(this.Borough)
-		}
+		this.data = fetch_data(this.Borough)
 		this.filtered = this.data
 		if(params.ZipCode != undefined){
 			this.filtered = this.data.filter(sale => sale.ZipCode == params.ZipCode);
@@ -90,6 +85,3 @@ squirrel = {
 	
 }
 module.exports = squirrel
-results = squirrel.filter({Borough: 'brooklyn', ZipCode: '11222'})
-debugger
-results.filtered.map(r => console.log(r))
