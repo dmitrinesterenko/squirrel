@@ -1,6 +1,14 @@
 const xlsx = require('xlsx')
+const { Readable } = require('stream')
 
 function fetchData (nabe) {
+
+	const inStream = new Readable({
+		objectMode: true,
+		read() {}
+	})
+	inStream.pipe(process.stdout)
+
 	function getValue (props, field = 'v', defaultValue = 0) {
 	  if (props && props[field]) {
 	    return props[field]
@@ -39,11 +47,11 @@ function fetchData (nabe) {
   // B, I, K, N, P, T, U
   // start with the magic number where these spreadsheets start their data
   var i = 6
-  var data = []
+  var data
   var sheet = workbook.Sheets[workbook.SheetNames[0]]
   var nextEntry
   do {
-    data[i - 6] = {
+    data = {
       Neighborhood: getValue(sheet['B' + i], 'v', ''),
       Price: getValue(sheet['T' + i]),
       Address: getValue(sheet['I' + i], 'v', ''),
@@ -53,20 +61,17 @@ function fetchData (nabe) {
       SaleDate: getValue(sheet['U' + i], 'w', '')
     }
     nextEntry = workbook.Sheets[workbook.SheetNames[0]]['B' + (i + 1)]
-		console.log(data[i-6])
+		//process.stdout.write(data)
+		//console.log(data)
+		inStream.push(JSON.stringify(data))
     i = i + 1
 	} while (nextEntry !== undefined)
+	inStream.push(null)
 }
 
 function log (data) {
   // TODO add a verbose check before printing out
   console.log(data)
 }
-fetchData(this.Borough)
-
-const outStream = new Writeable({
-	write(chunk, encoding, callback){
-
-	}
-})
+fetchData("Brooklyn")
 
