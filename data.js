@@ -1,7 +1,41 @@
 const xlsx = require('xlsx')
 const { Readable } = require('stream')
 
-function fetchData (nabe) {
+var csv = require("fast-csv")
+options = { headers: 'true', objectMode:'true', ignoreEmpty:'true' }
+csv.fromPath("data/rollingsales_"+Borough+".csv", options)
+.on("data", function(data){
+	for k in filters.keys{
+			if(filters[k] == data[k]){
+				keep = true	
+			}
+		}
+		if(keep){
+			console.log(entry);
+		}
+
+	}
+};
+//inStream.pipe(process.stdout)
+
+//Initial params are probably:
+// params = { Borough: "Brooklyn|Queens|New York" }
+// they indicate which Bourough CSV file we wish to read
+function RealEstateStream(params, options){
+		if (!(this instanceof RealEstateStream)){
+			return new RealEstateStream(params, options);
+		}
+
+		if(!options) options = {};
+		options.objectMode = true;
+		Readable.call(this, options);
+		this.params = params;
+}
+//our stream will inherit from Readable
+util.inherits(RealEstateStream, Readable);
+
+//What does it mean to "read" from our stream
+RealEstateStream.prototype._read = function(){
 
 	const inStream = new Readable({
 		objectMode: true,
@@ -73,5 +107,21 @@ function log (data) {
   // TODO add a verbose check before printing out
   console.log(data)
 }
-fetchData("Brooklyn")
+
+var filterStream = new RealEstateStream("Brooklyn");
+filterStream.on('readable', function(){
+	var entry;
+	var keep = false;
+	while (null !== (entry = readStream.read())){
+		for k in filter.keys{
+			if(filter[k] == entry[k]){
+				keep = true	
+			}
+		}
+		if(keep){
+			console.log(entry);
+		}
+	}
+
+});
 

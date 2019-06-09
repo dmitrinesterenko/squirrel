@@ -22,6 +22,7 @@
   "author": "Dmitri Nesterenko",
   "license": "ISC",
   "dependencies": {
+    "fast-csv": "^2.5.0",
     "xlsx": "^0.14.2"
   },
   "devDependencies": {
