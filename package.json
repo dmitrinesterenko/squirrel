@@ -22,7 +22,7 @@
   "author": "Dmitri Nesterenko",
   "license": "ISC",
   "dependencies": {
-    "xlsx": "^0.14.2"
+    "xlsx": "^0.17.0"
   },
   "devDependencies": {
     "eslint": "^5.16.0",
